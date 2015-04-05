@@ -33,6 +33,24 @@
 #define STEP     1.e-4
 #define INV_STEP 1.e+4
 
+typedef enum OptionEnum
+{
+	NEURON_IC = 1,
+	NEURON_MU,
+	NEURON_SQRTD,
+	NEURON_RST,
+	NEURON_SPK,
+	NEURON_THRESHOLD,
+	NEURON_FNC,
+	NEURON_FNC_PAR,
+	LINK_WGT,
+	LINK_NUM,
+	CALC_TIME,
+	SKP_PNT,
+
+	LAST_OPTION
+} Option;
+
 typedef struct ParTag
 {
 	Neuron *neuron;
@@ -46,5 +64,15 @@ typedef struct ParTag
 } SysParam;
 
 int  sys_function(double *xin, void   *par, double  tin, double *kout);
+
+typedef struct getCosParTag {
+	double Amp;
+	double Omg;
+	double Phi;
+} getCosPar;
+double getCos(void *pars, double time);
+void getCosAddPar(double value, int parNum, void *pars);
+
+double zeroFun(void *pars, double time);
 
 #endif//SIM_SYSTEM_H
