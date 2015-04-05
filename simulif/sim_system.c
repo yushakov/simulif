@@ -28,6 +28,7 @@
 #include "sim_system.h"
 #include "rk4.h"
 #include "mtwist-1.5/randistrs.h"
+#include <math.h>
 
 /*
 *
@@ -39,7 +40,6 @@ int sys_function(double *xin, void   *par, double  tin, double *kout)
 	Neuron *pNrn = sys_param->neuron;
 	Link   *pLnk;
 	double  s = 0;
-	double  infun_param[4];
 	double *Spike = sys_param->spikes;
 	double *x = sys_param->ini_cons;
 	double *inpVec = sys_param->input_vector;
@@ -62,11 +62,7 @@ int sys_function(double *xin, void   *par, double  tin, double *kout)
 			inpVec[i] = s;
 		}
 
-		infun_param[0] = pNrn->Amp;
-		infun_param[1] = pNrn->Omg;
-		infun_param[2] = pNrn->Phi;
-		infun_param[3] = tin;
-		kout[i] = -pNrn->mu*xin[i] + inpVec[i] + pNrn->infun((void*)infun_param) + rd_normal(0, pNrn->sqrtD);
+		kout[i] = -pNrn->mu*xin[i] + inpVec[i] + pNrn->infun(pNrn->infun_params, tin) + rd_normal(0, pNrn->sqrtD);
 
 		// track spikes
 		if (callCnt == 3)
@@ -90,4 +86,42 @@ int sys_function(double *xin, void   *par, double  tin, double *kout)
 	if (callCnt == 4) callCnt = 0;
 
 	return 0;
+}
+
+/*
+*
+*/
+double getCos(void *pars, double time)
+{
+	getCosPar *pD = (getCosPar*)pars;
+	return pD->Amp * cos(pD->Omg * time + pD->Phi);
+}
+
+/*
+*
+*/
+void getCosAddPar(double value, int parNum, void *pars)
+{
+	getCosPar *pD = (getCosPar*)pars;
+
+	switch (parNum) {
+	case 0:
+		pD->Amp = value;
+		break;
+	case 1:
+		pD->Omg = value;
+		break;
+	case 2:
+		pD->Phi = value;
+	default:
+		break;
+	}
+}
+
+/*
+*
+*/
+double zeroFun(void *pars, double time)
+{
+	return 0.0;
 }

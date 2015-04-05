@@ -69,11 +69,32 @@ void setVal(double *val, char *str, int *nxt_arg, int *opt_cnt, Option opt)
 /*
 *
 */
+void (*nrnSetFun)(double value, int parNum, void *pars) = NULL;
+void setFunPar(char *str, int parNum, void *pars, int *nxt_arg, int *opt_cnt)
+{
+	double val;
+	if (isNumeric(str))
+	{
+		val = atof(str);
+		nrnSetFun(val, parNum, pars);
+		*nxt_arg = 1;
+	}
+	else
+	{
+		*nxt_arg = 0;
+		*opt_cnt = LAST_OPTION;
+	}
+}
+
+/*
+*
+*/
 int parseArguments(int acnt, char *avec[], SysParam *sys_param)
 {
 	int argIdx;
 	int nxtArg;
 	int optCnt = 0;
+	int nrnSetFunParNum = 0;
 	Neuron *nrnPtr = NULL;
 	IniCon *icPtr = NULL;
 	Link   *lnkPtr = NULL;
@@ -98,6 +119,7 @@ int parseArguments(int acnt, char *avec[], SysParam *sys_param)
 			}
 			memset(nrnPtr, 0, sizeof(Neuron)); // all fields set to zero
 			nrnPtr->infun = zeroFun;
+			nrnPtr->infun_params = NULL;
 			optCnt = NEURON_IC;
 		}
 		else if (strcmp(avec[argIdx], "-k") == 0) // add link
@@ -178,9 +200,12 @@ int parseArguments(int acnt, char *avec[], SysParam *sys_param)
 				case NEURON_FNC:
 					if (strcmp(avec[argIdx], "cos") == 0)
 					{
+						nrnSetFun = getCosAddPar;
 						nrnPtr->infun = getCos;
+						nrnSetFunParNum = 0;
+						nrnPtr->infun_params = (void*)malloc(sizeof(getCosPar));
 						nxtArg = 1;
-						optCnt++;
+						optCnt = NEURON_FNC_PAR;
 					}
 					else
 					{
@@ -189,14 +214,9 @@ int parseArguments(int acnt, char *avec[], SysParam *sys_param)
 						optCnt++;
 					}
 					break;
-				case NEURON_FNC_AMP:
-					setVal(&nrnPtr->Amp, avec[argIdx], &nxtArg, &optCnt, LAST_OPTION);
-					break;
-				case NEURON_FNC_OMG:
-					setVal(&nrnPtr->Omg, avec[argIdx], &nxtArg, &optCnt, LAST_OPTION);
-					break;
-				case NEURON_FNC_PHI:
-					setVal(&nrnPtr->Phi, avec[argIdx], &nxtArg, &optCnt, LAST_OPTION);
+				case NEURON_FNC_PAR:
+					setFunPar(avec[argIdx], nrnSetFunParNum, nrnPtr->infun_params, &nxtArg, &optCnt);
+					nrnSetFunParNum++;
 					break;
 				case LINK_WGT:
 					setVal(&lnkPtr->weight, avec[argIdx], &nxtArg, &optCnt, LAST_OPTION);

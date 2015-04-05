@@ -40,7 +40,7 @@
   #define NULL 0
 #endif
 
-static char version[] = "1.1.6";
+static char version[] = "1.1.7";
 
 #define PRINT(fp, str, ...) fprintf(fp, str, __VA_ARGS__); printf(str, __VA_ARGS__)
 
@@ -108,9 +108,9 @@ int main(int argc, char *argv[])
 		PRINT(fp, "# Initial:   %f\n", pIC->val);
 		PRINT(fp, "# mu:        %f\n", pN->mu);
 		PRINT(fp, "# sqrtD:     %f\n", pN->sqrtD);
-		PRINT(fp, "# A:         %f\n", pN->Amp);
-		PRINT(fp, "# Omega:     %f\n", pN->Omg);
-		PRINT(fp, "# Phi:       %f\n", pN->Phi);
+		//PRINT(fp, "# A:         %f\n", pN->Amp);
+		//PRINT(fp, "# Omega:     %f\n", pN->Omg);
+		//PRINT(fp, "# Phi:       %f\n", pN->Phi);
 
 		pK = pN->k;
 		while(pK != 0)
