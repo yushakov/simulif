@@ -27,28 +27,10 @@
 
 #include "neuron.h"
 #include <malloc.h>
-#include <math.h>
 
 #ifndef NULL
 #define NULL 0
 #endif
-
-/*
-*
-*/
-double getCos(void *pars)
-{
-	double *pD = (double*)pars;
-	return pD[0] * cos(pD[1] * pD[3] + pD[2]);
-}
-
-/*
-*
-*/
-double zeroFun(void *pars)
-{
-	return 0.0;
-}
 
 /*
  *
@@ -71,6 +53,11 @@ void freeNeurons(Neuron *lst)
 		}
 		pN2 = pN1;
 		pN1 = pN1->nxtNeuron;
+		if (pN2->infun_params)
+		{
+			free(pN2->infun_params);
+			pN2->infun_params = NULL;
+		}
 		free(pN2);
 		pN2 = NULL;
 	}

@@ -42,9 +42,7 @@ typedef enum OptionEnum
 	NEURON_SPK,
 	NEURON_THRESHOLD,
 	NEURON_FNC,
-	NEURON_FNC_AMP,
-	NEURON_FNC_OMG,
-	NEURON_FNC_PHI,
+	NEURON_FNC_PAR,
 	LINK_WGT,
 	LINK_NUM,
 	CALC_TIME,
@@ -66,5 +64,15 @@ typedef struct ParTag
 } SysParam;
 
 int  sys_function(double *xin, void   *par, double  tin, double *kout);
+
+typedef struct getCosParTag {
+	double Amp;
+	double Omg;
+	double Phi;
+} getCosPar;
+double getCos(void *pars, double time);
+void getCosAddPar(double value, int parNum, void *pars);
+
+double zeroFun(void *pars, double time);
 
 #endif//SIM_SYSTEM_H

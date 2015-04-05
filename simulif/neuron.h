@@ -42,10 +42,13 @@ typedef struct NeuronTag
 	double rst_level;
 	double spk_level;
 	double threshold;
-	double (*infun)(void *pars);
+	double (*infun)(void *pars, double time);
+	void    *infun_params;
+	/*
 	double Amp;
 	double Omg;
 	double Phi;
+	*/
 	Link   *k;
 	struct NeuronTag *nxtNeuron;
 } Neuron;
@@ -56,8 +59,6 @@ typedef struct IniConTag
 	struct IniConTag *nxtIniCon;
 } IniCon;
 
-double getCos(void *pars);
-double zeroFun(void *pars);
 void   freeNeurons(Neuron *lst);
 void   freeIniCons(IniCon *lst);
 
