@@ -1,17 +1,14 @@
 from pylab import *
 import sys
 
-#x = loadtxt("output.txt", delimiter=",", unpack=False)
 x = loadtxt(sys.argv[1], delimiter=",", unpack=False)
 
-subplot(3, 1, 1)
-plot(x[:,0], x[:,1])
-title(sys.argv[1])
+cols = len(x[0])
 
-subplot(3, 1, 2)
-plot(x[:,0], x[:,2])
-
-subplot(3, 1, 3)
-plot(x[:,0], x[:,3])
+for col in xrange(cols-1):
+    subplot(cols-1, 1, col+1)
+    plot(x[:,0], x[:,col+1])
+    if col == 0:
+        title(sys.argv[1])
 
 show()

@@ -40,7 +40,7 @@
   #define NULL 0
 #endif
 
-static char version[] = "1.1.5";
+static char version[] = "1.1.6";
 
 #define PRINT(fp, str, ...) fprintf(fp, str, __VA_ARGS__); printf(str, __VA_ARGS__)
 
@@ -52,9 +52,9 @@ char *dummy_argv[] = {
 		"simulif.exe",
 		"-t", "70.0",
 		"-s", "10000",
-		      //IC      mu    sqrtD   rst   spk  thr  fnm     A       Omg    Phi          wgt    num
-		"-n", "0.001", "0.5", "4",    "-1", "5", "1", "cos", "0.98", "0.5", "0.0", "-k", "0.33", "7",
-		"-n", "0.002", "0.5", "4",    "-1", "5", "1", "cos", "0.75", "0.6", "0.1", "-k", "0.2",  "9", "-k", "-0.37", "3"};
+		      //IC      mu    sqrtD   rst   spk  thr         fnm     A       Omg    Phi          wgt    num
+		"-n", "0.001", "0.5", "4",    "-1", "5", "1", "-f", "cos", "0.98", "0.5", "0.0", "-k", "0.33", "7",
+		"-n", "0.002", "0.5", "4",    "-1", "5", "1", "-f", "cos", "0.75", "0.6", "0.1", "-k", "0.2",  "9", "-k", "-0.37", "3"};
 int main(int argc, char *argv[])
 {
 	Neuron *neurons = NULL;
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 
 	if(argc < 2)
 	{
-		argc = 37;
+		argc = 38;
 		argv = dummy_argv;
 		printf("Version: %s\n", version);
 	}

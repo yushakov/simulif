@@ -83,7 +83,7 @@ int parseArguments(int acnt, char *avec[], SysParam *sys_param)
 
 	for (argIdx = 1; argIdx < acnt; argIdx++)
 	{
-		if (strcmp(avec[argIdx], "-n") == 0)
+		if (strcmp(avec[argIdx], "-n") == 0) // add neuron
 		{
 			pN = (Neuron*)malloc(sizeof(Neuron));
 			if (sys_param->neuron == 0)
@@ -100,7 +100,7 @@ int parseArguments(int acnt, char *avec[], SysParam *sys_param)
 			nrnPtr->infun = zeroFun;
 			optCnt = NEURON_IC;
 		}
-		else if (strcmp(avec[argIdx], "-k") == 0)
+		else if (strcmp(avec[argIdx], "-k") == 0) // add link
 		{
 			pK = (Link*)malloc(sizeof(Link));
 			memset(pK, 0, sizeof(Link)); // all fields set to zero
@@ -115,6 +115,10 @@ int parseArguments(int acnt, char *avec[], SysParam *sys_param)
 				lnkPtr = pK;
 			}
 			optCnt = LINK_WGT;
+		}
+		else if (strcmp(avec[argIdx], "-f") == 0) // add function
+		{
+			optCnt = NEURON_FNC;
 		}
 		else if (strcmp(avec[argIdx], "-t") == 0)
 		{
