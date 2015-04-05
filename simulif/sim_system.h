@@ -33,6 +33,26 @@
 #define STEP     1.e-4
 #define INV_STEP 1.e+4
 
+typedef enum OptionEnum
+{
+	NEURON_IC = 1,
+	NEURON_MU,
+	NEURON_SQRTD,
+	NEURON_RST,
+	NEURON_SPK,
+	NEURON_THRESHOLD,
+	NEURON_FNC,
+	NEURON_FNC_AMP,
+	NEURON_FNC_OMG,
+	NEURON_FNC_PHI,
+	LINK_WGT,
+	LINK_NUM,
+	CALC_TIME,
+	SKP_PNT,
+
+	LAST_OPTION
+} Option;
+
 typedef struct ParTag
 {
 	Neuron *neuron;
