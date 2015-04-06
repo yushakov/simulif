@@ -91,6 +91,26 @@ int sys_function(double *xin, void   *par, double  tin, double *kout)
 /*
 *
 */
+char *getInpFncDescription(char *str, Neuron *np)
+{
+	sprintf(str, "# No external input\n");
+	switch (np->fun_id){
+	case COS:
+		if (np->infun_params)
+		{
+			getCosPar par = *(getCosPar*)np->infun_params;
+			sprintf(str, "# Input function: %f * COS(%f * t + %f)\n", par.Amp, par.Omg, par.Phi);
+		}
+		break;
+	default:
+		break;
+	}
+	return str;
+}
+
+/*
+*
+*/
 double getCos(void *pars, double time)
 {
 	getCosPar *pD = (getCosPar*)pars;

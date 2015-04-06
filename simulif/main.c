@@ -40,7 +40,7 @@
   #define NULL 0
 #endif
 
-static char version[] = "1.1.7";
+static char version[] = "1.1.8";
 
 #define PRINT(fp, str, ...) fprintf(fp, str, __VA_ARGS__); printf(str, __VA_ARGS__)
 
@@ -53,7 +53,8 @@ char *dummy_argv[] = {
 		"-t", "70.0",
 		"-s", "10000",
 		      //IC      mu    sqrtD   rst   spk  thr         fnm     A       Omg    Phi          wgt    num
-		"-n", "0.001", "0.5", "4",    "-1", "5", "1", "-f", "cos", "0.98", "0.5", "0.0", "-k", "0.33", "7",
+			  "-n", "0.001", "0.5", "4", "-1", "5", "1", "-k", "0.33", "7",
+		//"-n", "0.001", "0.5", "4",    "-1", "5", "1", "-f", "cos", "0.98", "0.5", "0.0", "-k", "0.33", "7",
 		"-n", "0.002", "0.5", "4",    "-1", "5", "1", "-f", "cos", "0.75", "0.6", "0.1", "-k", "0.2",  "9", "-k", "-0.37", "3"};
 int main(int argc, char *argv[])
 {
@@ -79,7 +80,8 @@ int main(int argc, char *argv[])
 
 	if(argc < 2)
 	{
-		argc = 38;
+		argc = 33;
+		//argc = 38;
 		argv = dummy_argv;
 		printf("Version: %s\n", version);
 	}
@@ -104,13 +106,12 @@ int main(int argc, char *argv[])
 	pIC = system_parameters.lstIniCons;
 	while(pN != 0)
 	{
+		char str[500];
 		PRINT(fp, "\n# neuron:  %d\n", order);
 		PRINT(fp, "# Initial:   %f\n", pIC->val);
 		PRINT(fp, "# mu:        %f\n", pN->mu);
 		PRINT(fp, "# sqrtD:     %f\n", pN->sqrtD);
-		//PRINT(fp, "# A:         %f\n", pN->Amp);
-		//PRINT(fp, "# Omega:     %f\n", pN->Omg);
-		//PRINT(fp, "# Phi:       %f\n", pN->Phi);
+		PRINT(fp, getInpFncDescription(str, pN), 0);
 
 		pK = pN->k;
 		while(pK != 0)

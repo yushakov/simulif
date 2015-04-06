@@ -65,6 +65,11 @@ typedef struct ParTag
 
 int  sys_function(double *xin, void   *par, double  tin, double *kout);
 
+typedef enum FunIDtag {
+	COS,
+	ZERO
+} FunID;
+
 typedef struct getCosParTag {
 	double Amp;
 	double Omg;
@@ -73,6 +78,9 @@ typedef struct getCosParTag {
 double getCos(void *pars, double time);
 void getCosAddPar(double value, int parNum, void *pars);
 
+
 double zeroFun(void *pars, double time);
+
+char *getInpFncDescription(char *str, Neuron *np);
 
 #endif//SIM_SYSTEM_H
