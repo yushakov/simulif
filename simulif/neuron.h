@@ -44,6 +44,7 @@ typedef struct NeuronTag
 	double threshold;
 	double (*infun)(void *pars, double time);
 	void    *infun_params;
+	int     fun_id;
 	Link   *k;
 	struct NeuronTag *nxtNeuron;
 } Neuron;

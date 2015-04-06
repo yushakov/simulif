@@ -119,6 +119,7 @@ int parseArguments(int acnt, char *avec[], SysParam *sys_param)
 			}
 			memset(nrnPtr, 0, sizeof(Neuron)); // all fields set to zero
 			nrnPtr->infun = zeroFun;
+			nrnPtr->fun_id = (int)ZERO;
 			nrnPtr->infun_params = NULL;
 			optCnt = NEURON_IC;
 		}
@@ -204,6 +205,7 @@ int parseArguments(int acnt, char *avec[], SysParam *sys_param)
 						nrnPtr->infun = getCos;
 						nrnSetFunParNum = 0;
 						nrnPtr->infun_params = (void*)malloc(sizeof(getCosPar));
+						nrnPtr->fun_id = (int)COS;
 						nxtArg = 1;
 						optCnt = NEURON_FNC_PAR;
 					}
