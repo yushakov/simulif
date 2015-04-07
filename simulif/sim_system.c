@@ -36,7 +36,7 @@
 int sys_function(double *xin, void   *par, double  tin, double *kout)
 {
 	int     i = 0;
-	SysParam *sys_param = (SysParam*)par;
+	System *sys_param = (System*)par;
 	Neuron *pNrn = sys_param->neuron;
 	Link   *pLnk;
 	double  s = 0;
@@ -71,7 +71,7 @@ int sys_function(double *xin, void   *par, double  tin, double *kout)
 			{
 				Spike[i] = INV_STEP;
 				rk4_reset_var(i, pNrn->rst_level);
-				((SysParam*)par)->spike_flag = 1;
+				((System*)par)->spike_flag = 1;
 			}
 			else
 			{

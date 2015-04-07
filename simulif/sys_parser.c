@@ -89,7 +89,7 @@ void setFunPar(char *str, int parNum, void *pars, int *nxt_arg, int *opt_cnt)
 /*
 *
 */
-int parseArguments(int acnt, char *avec[], SysParam *sys_param)
+int parseArguments(int acnt, char *avec[], System *sys_param)
 {
 	int argIdx;
 	int nxtArg;

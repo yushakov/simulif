@@ -40,7 +40,7 @@
   #define NULL 0
 #endif
 
-static char version[] = "1.1.8";
+static char version[] = "1.1.9";
 
 #define PRINT(fp, str, ...) fprintf(fp, str, __VA_ARGS__); printf(str, __VA_ARGS__)
 
@@ -58,20 +58,17 @@ char *dummy_argv[] = {
 		"-n", "0.002", "0.5", "4",    "-1", "5", "1", "-f", "cos", "0.75", "0.6", "0.1", "-k", "0.2",  "9", "-k", "-0.37", "3"};
 int main(int argc, char *argv[])
 {
-	Neuron *neurons = NULL;
-	double *x       = NULL;
-	double *spikes  = NULL;
-	double *inpVec  = NULL;
-	int     order   = 0;
+	double *x     = NULL;
+	int     order = 0;
 
 	Link   *pK;
 	Neuron *pN;
 	IniCon *pIC;
-	int i;
-	double   dot_interval, next_dot;
-	SysParam system_parameters;
-	int      skip_points = 1000;
-	double   calc_time   = 5.0;
+	int     i;
+	double  dot_interval, next_dot;
+	System  system;
+	int     skip_points = 1000;
+	double  calc_time   = 5.0;
 
 	double t     = 0.0;
 	double tprev = 0.0;
@@ -88,22 +85,21 @@ int main(int argc, char *argv[])
 
 	fprintf(fp, "# Version: %s\n\n", version);
 
-	system_parameters.neuron       = NULL;
-	system_parameters.spikes       = NULL;
-	system_parameters.ini_cons     = NULL;
-	system_parameters.input_vector = NULL;
-	system_parameters.lstIniCons   = NULL;
+	system.neuron       = NULL;
+	system.spikes       = NULL;
+	system.ini_cons     = NULL;
+	system.input_vector = NULL;
+	system.lstIniCons   = NULL;
 
-	parseArguments(argc, argv, &system_parameters);
-	calc_time          = system_parameters.calc_time;
-	skip_points        = system_parameters.skip_points;
-	neurons            = system_parameters.neuron;
+	parseArguments(argc, argv, &system);
+	calc_time   = system.calc_time;
+	skip_points = system.skip_points;
 
 	fprintf(fp, "# Calculation time: %f\n\n", calc_time);
 	fprintf(fp, "# Skipping output points: %d\n", skip_points);
 
-	pN = neurons;
-	pIC = system_parameters.lstIniCons;
+	pN  = system.neuron;
+	pIC = system.lstIniCons;
 	while(pN != 0)
 	{
 		char str[500];
@@ -127,23 +123,21 @@ int main(int argc, char *argv[])
 	fflush(fp);
 
 	// allocate spikes array
-	spikes = (double*)calloc(order, sizeof(double));
-	inpVec = (double*)calloc(order, sizeof(double));
+	system.spikes       = (double*)calloc(order, sizeof(double));
+	system.input_vector = (double*)calloc(order, sizeof(double));
 
 	// set initial conditions to dynamic variables
 	x   = (double*)calloc(order, sizeof(double));
 	i   = -1;
-	pIC = system_parameters.lstIniCons;
+	pIC = system.lstIniCons;
 	while(pIC != 0)
 	{
 		x[++i] = pIC->val;
 		pIC    = pIC->nxtIniCon;
 	}
-	freeIniCons(system_parameters.lstIniCons);
+	freeIniCons(system.lstIniCons);
 
-	system_parameters.spikes       = spikes;
-	system_parameters.input_vector = inpVec;
-	system_parameters.ini_cons     = x;
+	system.ini_cons = x;
 
 	// calculation cycle
 	rk4_init(order);
@@ -154,15 +148,15 @@ int main(int argc, char *argv[])
 	printf("..................................................\n");
 	while(t <= calc_time)
 	{
-		system_parameters.spike_flag = 0;
-		rk4_calc(x, (void*)(&system_parameters), STEP, t, sys_function);
+		system.spike_flag = 0;
+		rk4_calc(x, (void*)(&system), STEP, t, sys_function);
 		t += STEP;
 
 		int j = 0;
-		if(cnt < skip_points && system_parameters.spike_flag == 0) cnt++;
+		if (cnt < skip_points && system.spike_flag == 0) cnt++;
 		else
 		{
-			if(system_parameters.spike_flag == 0)
+			if (system.spike_flag == 0)
 			{
 				fprintf(fp, "%14.7f", t);
 				for(j = 0; j < order; j++) fprintf(fp, ", %14.7f", x[j]);
@@ -171,10 +165,10 @@ int main(int argc, char *argv[])
 			else
 			{
 				fprintf(fp, "%14.7f", t);
-				pN = neurons;
+				pN = system.neuron;
 				for(j = 0; j < order; j++)
 				{
-					if(spikes[j] > 0.0) fprintf(fp, ", %14.7f", pN->spk_level);
+					if(system.spikes[j] > 0.0) fprintf(fp, ", %14.7f", pN->spk_level);
 					else                fprintf(fp, ", %14.7f", x[j]);
 					pN = pN->nxtNeuron;
 				}
@@ -195,10 +189,10 @@ int main(int argc, char *argv[])
 	printf("\ndone\n");
 
 	// free memory
-	freeNeurons(neurons);
 	free(x);
-	free(spikes);
-	free(inpVec);
+	freeNeurons(system.neuron);
+	free(system.spikes);
+	free(system.input_vector);
 
 	return 0;
 }

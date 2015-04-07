@@ -30,6 +30,6 @@
 
 #include "sim_system.h"
 
-int  parseArguments(int acnt, char *avec[], SysParam *sys_param);
+int  parseArguments(int acnt, char *avec[], System *sys_param);
 
 #endif//SYS_PARSER_H

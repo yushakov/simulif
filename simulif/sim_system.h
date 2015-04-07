@@ -51,7 +51,7 @@ typedef enum OptionEnum
 	LAST_OPTION
 } Option;
 
-typedef struct ParTag
+typedef struct SystemTag
 {
 	Neuron *neuron;
 	double *spikes;
@@ -61,7 +61,7 @@ typedef struct ParTag
 	double  calc_time;
 	int     skip_points;
 	IniCon  *lstIniCons;
-} SysParam;
+} System;
 
 int  sys_function(double *xin, void   *par, double  tin, double *kout);
 
