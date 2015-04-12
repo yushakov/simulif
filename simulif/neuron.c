@@ -48,6 +48,7 @@ void freeNeurons(Neuron *lst)
 		{
 			pL2 = pL1;
 			pL1 = pL1->nxtLink;
+			spikeQ_destroy(&pL2->spike_q);
 			free(pL2);
 			pL2 = NULL;
 		}

@@ -84,6 +84,7 @@
     <ClCompile Include="neuron.c" />
     <ClCompile Include="rk4.c" />
     <ClCompile Include="sim_system.c" />
+    <ClCompile Include="spike.c" />
     <ClCompile Include="sys_parser.c" />
   </ItemGroup>
   <ItemGroup>

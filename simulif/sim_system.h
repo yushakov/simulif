@@ -46,6 +46,7 @@ typedef enum OptionEnum
 	NEURON_FNC_PAR,
 	LINK_WGT,
 	LINK_NUM,
+	LINK_DELAY,
 	CALC_TIME,
 	SKP_PNT,
 

@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 		pK = pN->k;
 		while(pK != 0)
 		{
-			PRINT(fp, "# link from %d: %f\n", (int)pK->intNum, pK->weight);
+			PRINT(fp, "# link from %d: %f; delay: %f\n", (int)pK->intNum, pK->weight, pK->delay);
 			pK = pK->nxtLink;
 		}
 

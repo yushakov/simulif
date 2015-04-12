@@ -39,6 +39,9 @@
     <ClCompile Include="sys_parser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="spike.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="neuron.h">
