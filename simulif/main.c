@@ -40,7 +40,7 @@
   #define NULL 0
 #endif
 
-static char version[] = "1.1.9";
+static char version[] = "1.1.10";
 
 #define PRINT(fp, str, ...) fprintf(fp, str, __VA_ARGS__); printf(str, __VA_ARGS__)
 
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 	fflush(fp);
 
 	// allocate spikes array
-	system.spikes       = (double*)calloc(order, sizeof(double));
+	system.spikes       = (Spike*)calloc(order, sizeof(Spike));
 	system.input_vector = (double*)calloc(order, sizeof(double));
 
 	// set initial conditions to dynamic variables
@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
 				pN = system.neuron;
 				for(j = 0; j < order; j++)
 				{
-					if(system.spikes[j] > 0.0) fprintf(fp, ", %14.7f", pN->spk_level);
+					if(system.spikes[j].height > 0.0) fprintf(fp, ", %14.7f", pN->spk_level);
 					else                fprintf(fp, ", %14.7f", x[j]);
 					pN = pN->nxtNeuron;
 				}

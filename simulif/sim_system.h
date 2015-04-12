@@ -29,6 +29,7 @@
 #define SIM_SYSTEM_H
 
 #include "neuron.h"
+#include "spike.h"
 
 #define STEP     1.e-4
 #define INV_STEP 1.e+4
@@ -54,7 +55,7 @@ typedef enum OptionEnum
 typedef struct SystemTag
 {
 	Neuron *neuron;
-	double *spikes;
+	Spike  *spikes;
 	double *ini_cons;
 	double *input_vector;
 	int     spike_flag;

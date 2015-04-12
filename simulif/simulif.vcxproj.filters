@@ -59,5 +59,8 @@
     <ClInclude Include="sys_parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="spike.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

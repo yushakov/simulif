@@ -92,6 +92,7 @@
     <ClInclude Include="neuron.h" />
     <ClInclude Include="rk4.h" />
     <ClInclude Include="sim_system.h" />
+    <ClInclude Include="spike.h" />
     <ClInclude Include="sys_parser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
