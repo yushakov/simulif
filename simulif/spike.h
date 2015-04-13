@@ -43,6 +43,6 @@ int spikeQ_new(int size, SpikeQ *sq);
 int spikeQ_destroy(SpikeQ *sq);
 int spikeQ_push(Spike s, SpikeQ *sq);
 int spikeQ_pop(Spike *s, SpikeQ *sq);
-int spikeQ_last(Spike *s, SpikeQ *sq);
+int spikeQ_first(Spike *s, SpikeQ *sq);
 
 #endif//SPIKE_H
