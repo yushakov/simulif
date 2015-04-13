@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 		printf("Version: %s\n", version);
 	}
 
-	fprintf(fp, "# Version: %s\n\n", version);
+	PRINT(fp, "# Version: %s\n\n", version);
 
 	system.neuron       = NULL;
 	system.spikes       = NULL;
