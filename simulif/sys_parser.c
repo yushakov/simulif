@@ -126,7 +126,11 @@ int parseArguments(int acnt, char *avec[], System *sys_param)
 		else if (strcmp(avec[argIdx], "-k") == 0) // add link
 		{
 			pK = (Link*)malloc(sizeof(Link));
-			memset(pK, 0, sizeof(Link)); // all fields set to zero
+			pK->weight  =  0.0;
+			pK->intNum  = -1.0; // if not updated, then should not be accessible
+			pK->delay   =  0.0;
+			pK->nxtLink = NULL;
+			spikeQ_new(10, &pK->spike_q);
 			if (nrnPtr->k == NULL)
 			{
 				nrnPtr->k = pK;
@@ -225,6 +229,9 @@ int parseArguments(int acnt, char *avec[], System *sys_param)
 					break;
 				case LINK_NUM:
 					setVal(&lnkPtr->intNum, avec[argIdx], &nxtArg, &optCnt, LAST_OPTION);
+					break;
+				case LINK_DELAY:
+					setVal(&lnkPtr->delay, avec[argIdx], &nxtArg, &optCnt, LAST_OPTION);
 					break;
 				case CALC_TIME:
 					setVal(&(sys_param->calc_time), avec[argIdx], &nxtArg, &optCnt, LAST_OPTION);

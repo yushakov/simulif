@@ -1,7 +1,7 @@
 /****************************************************************************
-*  neuron.h                                                                 *
+*  spike.h                                                                  *
 *                                                                           *
-*  Created on:   March 19, 2015                                             *
+*  Created on:   April 10, 2015                                             *
 *  Author:       Yury Ushakov                                               *
 *  Email:        nomah@list.ru                                              *
 *                                                                           *
@@ -24,42 +24,25 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
 *                                                                           *
 ****************************************************************************/
+#ifndef SPIKE_H
+#define SPIKE_H
 
-#ifndef NEURON_H_
-#define NEURON_H_
+typedef struct SpikeTag {
+	double height;
+	double spikeTime;
+} Spike;
 
-#include "spike.h"
+typedef struct SpikeQtag {
+	Spike *q;
+	int    size;
+	int    first;
+	int    last;
+} SpikeQ;
 
-typedef struct LinkTag
-{
-	double weight;
-	double intNum;
-	double delay;
-	SpikeQ spike_q;
-	struct LinkTag *nxtLink;
-} Link;
+int spikeQ_new(int size, SpikeQ *sq);
+int spikeQ_destroy(SpikeQ *sq);
+int spikeQ_push(Spike s, SpikeQ *sq);
+int spikeQ_pop(Spike *s, SpikeQ *sq);
+int spikeQ_last(Spike *s, SpikeQ *sq);
 
-typedef struct NeuronTag
-{
-	double mu;
-	double sqrtD;
-	double rst_level;
-	double spk_level;
-	double threshold;
-	double (*infun)(void *pars, double time);
-	void    *infun_params;
-	int      fun_id;
-	Link    *k;
-	struct NeuronTag *nxtNeuron;
-} Neuron;
-
-typedef struct IniConTag
-{
-	double val;
-	struct IniConTag *nxtIniCon;
-} IniCon;
-
-void   freeNeurons(Neuron *lst);
-void   freeIniCons(IniCon *lst);
-
-#endif /* NEURON_H_ */
+#endif//SPIKE_H
