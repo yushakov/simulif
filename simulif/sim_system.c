@@ -40,7 +40,7 @@ int sys_function(double *xin, void   *par, double  tin, double *kout)
 	Neuron *pNrn = sys_param->neuron;
 	Link   *pLnk;
 	double  s = 0;
-	Spike *Spike = sys_param->spikes;
+	Spike  *_Spike = sys_param->spikes;
 	double *x = sys_param->ini_cons;
 	double *inpVec = sys_param->input_vector;
 	static int callCnt = 0;
@@ -52,11 +52,24 @@ int sys_function(double *xin, void   *par, double  tin, double *kout)
 		{
 			s = 0.0;
 			pLnk = pNrn->k;
-			while (pLnk != 0 &&
-				xin[i] > -0.1 // no reaction in refractory period
-				)
+			while (pLnk != 0)
 			{
-				s += pLnk->weight * Spike[(int)pLnk->intNum].height;
+				Spike old_spike;
+				Spike curr_spike = _Spike[(int)pLnk->intNum];
+				if (curr_spike.height > 0.0)
+				{
+					spikeQ_push(curr_spike, &pLnk->spike_q);
+				}
+				
+				if (spikeQ_first(&old_spike, &pLnk->spike_q) >= 0
+					&& old_spike.spikeTime + pLnk->delay < tin)
+				{
+					if (xin[i] > -0.1) // no reaction in refractory period
+					{
+						s += pLnk->weight * old_spike.height;
+					}
+					spikeQ_pop(&old_spike, &pLnk->spike_q);
+				}
 				pLnk = pLnk->nxtLink;
 			}
 			inpVec[i] = s;
@@ -69,15 +82,15 @@ int sys_function(double *xin, void   *par, double  tin, double *kout)
 		{
 			if (x[i] > pNrn->threshold)
 			{
-				Spike[i].height    = INV_STEP;
-				Spike[i].spikeTime = tin;
+				_Spike[i].height    = INV_STEP;
+				_Spike[i].spikeTime = tin;
 				rk4_reset_var(i, pNrn->rst_level);
 				((System*)par)->spike_flag = 1;
 			}
 			else
 			{
-				Spike[i].height    = 0.0;
-				Spike[i].spikeTime = -1.0;
+				_Spike[i].height    =  0.0;
+				_Spike[i].spikeTime = -1.0;
 			}
 		}
 		i++;
