@@ -66,7 +66,7 @@ int spikeQ_push(Spike s, SpikeQ *sq)
 			{
 				*to++ = sq->q[i];
 			}
-			sq->last -= sq->first + 1;
+			sq->last -= sq->first - 1;
 			sq->first = 0;
 			sq->q[sq->last] = s;
 		}
@@ -84,8 +84,7 @@ int spikeQ_push(Spike s, SpikeQ *sq)
 				{
 					*to++ = sq->q[i];
 				}
-				sq->last -= sq->first + 1;
-				sq->first = 0;
+				sq->last++;
 				new_q[sq->last] = s;
 				free(sq->q);
 				sq->q = new_q;
@@ -107,13 +106,23 @@ int spikeQ_pop(Spike *s, SpikeQ *sq)
 		*s = sq->q[sq->first];
 		sq->first++;
 	}
+	else
+	{
+		return -1;
+	}
 	return 0;
 }
 
 int spikeQ_first(Spike *s, SpikeQ *sq)
 {
-	int last = sq->last;
-	if (last >= 0) *s = sq->q[last];
+	if (sq->last >= 0)
+	{
+		*s = sq->q[sq->first];
+	}
+	else
+	{
+		return -1;
+	}
 
 	return 0;
 }

@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simulif", "simulif\simulif.vcxproj", "{AEDF0CDA-DF64-496E-B3E3-7CC689102DBA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_spike_queue", "test_spike_queue\test_spike_queue.vcxproj", "{E85ED8F7-D777-4C15-ABF2-233075D23F42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +17,10 @@ Global
 		{AEDF0CDA-DF64-496E-B3E3-7CC689102DBA}.Debug|Win32.Build.0 = Debug|Win32
 		{AEDF0CDA-DF64-496E-B3E3-7CC689102DBA}.Release|Win32.ActiveCfg = Release|Win32
 		{AEDF0CDA-DF64-496E-B3E3-7CC689102DBA}.Release|Win32.Build.0 = Release|Win32
+		{E85ED8F7-D777-4C15-ABF2-233075D23F42}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E85ED8F7-D777-4C15-ABF2-233075D23F42}.Debug|Win32.Build.0 = Debug|Win32
+		{E85ED8F7-D777-4C15-ABF2-233075D23F42}.Release|Win32.ActiveCfg = Release|Win32
+		{E85ED8F7-D777-4C15-ABF2-233075D23F42}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
