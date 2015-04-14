@@ -115,14 +115,13 @@ int spikeQ_pop(Spike *s, SpikeQ *sq)
 
 int spikeQ_first(Spike *s, SpikeQ *sq)
 {
-	if (sq->last >= 0)
+	if (sq->last >= sq->first)
 	{
 		*s = sq->q[sq->first];
+		return 0;
 	}
 	else
 	{
 		return -1;
 	}
-
-	return 0;
 }
