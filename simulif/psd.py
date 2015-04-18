@@ -1,7 +1,7 @@
 """**************************************************************************
-*  draw_distr.py                                                            *
+*  psd.py                                                                   *
 *                                                                           *
-*  Created on:   March 28, 2015                                             *
+*  Created on:   April 18, 2015                                             *
 *  Author:       Yury Ushakov                                               *
 *  Email:        nomah@list.ru                                              *
 *                                                                           *
@@ -11,7 +11,7 @@
 *  This script can be used to process output of the program "simulif".      *
    Use it as following:
 
-     python draw_distr.py output_filename column_number
+     python psd.py output_filename column_number
 
    where "output_filename" is a file of the following format:
 
@@ -46,32 +46,40 @@
 from pylab import *
 import sys
 
-bin_num  = 1000
+dt = 1.e-1
+spike_value = 1.0 / dt
 spike_threshold = 2
 filename = sys.argv[1]
 colnum   = int(sys.argv[2])
 
 from out_proc_util import *
-isi, max_isi = get_isi_array(filename, colnum, spike_threshold)
-len_isi = len(isi)
-step = max_isi / (bin_num)
+isi, _ = get_isi_array(filename, colnum, spike_threshold)
+spike_train = sampled_spike_train_from_isi(isi, dt, spike_value)
 
-# get distribution
-distribution = [0.0]*bin_num
-xvalues      = [step*xv for xv in range(bin_num)]
-inv_step = 1.0 / step
-bin_incr = 1.0 / (step * len_isi)
-for interval in isi:
-    dstr_idx = int(interval * inv_step)
-    if interval == max_isi:
-        dstr_idx = bin_num - 1
-    distribution[dstr_idx] += bin_incr
+# power spectrum density calculation
+idx = 0
+length = pow(2, 10)
+shift  = length / 2
+N = len(spike_train) / shift + 1
+psd = [0.0]*length
+window = hamming(length)
+one_by_N = 1.0 / float(N)
+for iter in range(N):
+    #"""
+    sig = []
+    for (i, spk_trn) in enumerate(spike_train[idx:idx+length]):
+        sig.append(window[i]*spk_trn)
+    f = abs(fft(sig))
+    #"""
+    #f = abs(fft(spike_train[idx:idx+length]))
+    for (i,s) in enumerate(f):
+        psd[i] += s * one_by_N
+    idx += shift
 
-S = trapz(distribution, x=xvalues)
-print("Area under the curve: {}".format(S))
-
-plot(xvalues, distribution)
-title("Interspike interval density")
-xlabel("ISI length")
-ylabel("Probability density")
+figure()
+psd_half_len = len(psd)/2
+freqs = [x / float(psd_half_len) for x in range(psd_half_len)]
+plot(freqs, psd[0:psd_half_len])
+title("Power Spectrum Density")
+xlabel("Normalized frequency (rad / pi)")
 show()
