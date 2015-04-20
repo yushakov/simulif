@@ -37,19 +37,17 @@ def get_isi_array(filename, colnum, spike_threshold):
     prev_t  = 0
     idx     = 0
     max_isi = 0
-    print("ISI array construction")
     for line in f:
         s = line.strip()
         if s and s[0] != '#':
             fields = line.split(',')
             x      = tuple([float(field) for field in fields])
-            if idx > 0 and xprev < spike_threshold and x[colnum] > spike_threshold:
+            if idx > 0 and xprev < spike_threshold < x[colnum]:
                 interval = x[0] - prev_t
                 isi.append(interval)
                 if max_isi < interval:
                     max_isi = interval
                 prev_t = x[0]
-                max_time = x[0]
             else:
                 xprev = x[colnum]
             idx += 1

@@ -53,10 +53,13 @@ filename = sys.argv[1]
 colnum   = int(sys.argv[2])
 
 from out_proc_util import *
+print("ISI array construction")
 isi, _ = get_isi_array(filename, colnum, spike_threshold)
+print("Sampled spike train construction")
 spike_train = sampled_spike_train_from_isi(isi, dt, spike_value)
 
 # power spectrum density calculation
+print("PSD construction")
 idx = 0
 length = pow(2, 10)
 shift  = length / 2
@@ -64,16 +67,16 @@ N = len(spike_train) / shift + 1
 psd = [0.0]*length
 window = hamming(length)
 one_by_N = 1.0 / float(N)
+spk_trn_len = len(spike_train)
 for iter in range(N):
+    if idx + length >= spk_trn_len:
+        break
     #"""
-    sig = []
-    for (i, spk_trn) in enumerate(spike_train[idx:idx+length]):
-        sig.append(window[i]*spk_trn)
-    f = abs(fft(sig))
+    sig = [window[i] * s for (i, s) in enumerate(spike_train[idx:idx+length])]
+    f   = abs(fft(sig))
     #"""
     #f = abs(fft(spike_train[idx:idx+length]))
-    for (i,s) in enumerate(f):
-        psd[i] += s * one_by_N
+    psd  = [p + f[i]*one_by_N for (i, p) in enumerate(psd)]
     idx += shift
 
 figure()
