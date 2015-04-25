@@ -1,4 +1,7 @@
 """
+    Requires two parameters:
+        input filename,
+        output filename (optional parameter).
     Input file can contain:
     20
     15
@@ -10,34 +13,30 @@
     3
     5
     7
-    i.e., 4 periodic inputs; etc.
-    
+    i.e., 4 periodic inputs; etc.    
 """
 import sys
 import queue as q
 import re
 import matplotlib.pyplot as plt
-
-fname   = sys.argv[1]
-file    = open(fname)
-sources = list()
+astr = " "
+fname    = sys.argv[1]
+file     = open(fname)
+sources  = list()
+src_lens = list()
+src_idxs = list()
+closest_prds = list()
 for line in file:
     strp = line.strip()
     if strp[0] != "#":
         periods = re.split(" ", strp)
-        sources.append(periods)
+        ilst = [int(ix) for ix in periods]
+        sources.append(ilst)
+        src_lens.append(len(ilst))
+        src_idxs.append(1)
+        closest_prds.append(ilst[0])
 file.close()
 
-prd_queues   = dict()
-closest_prds = list()
-for i, src in enumerate(sources):
-    Q = q.Queue()
-    for j, prd in enumerate(src):
-        Q.put(int(prd))
-        print("el: {}, qsize: {}".format(prd, Q.qsize()))
-        if j == 0:
-            closest_prds.append(Q.get())
-    prd_queues.update({i: Q})
 print("Section: {}".format(closest_prds))
 
 cls_prd_len = len(closest_prds)
@@ -51,12 +50,11 @@ while not break_flag:
     for i, clst_prd in enumerate(closest_prds):
         clst_prd -= min_prd
         if clst_prd == 0:
-            corresp_q = prd_queues.get(i)
-            if corresp_q.qsize() == 0:
+            if src_idxs[i] >= src_lens[i]:
                 zeroed += 1
-                for prd in sources[i]:
-                    corresp_q.put(int(prd))
-            clst_prd = corresp_q.get()
+                src_idxs[i] = 0
+            clst_prd  = sources[i][src_idxs[i]]
+            src_idxs[i] += 1
         closest_prds[i] = clst_prd
         if zeroed == cls_prd_len:
             break_flag = True
@@ -74,5 +72,5 @@ if len(sys.argv) >= 3:
     file.close()
 
 plt.hist(out_periods, bins=100)
-plt.title(fname)
+plt.title("{} {}".format(fname, astr))
 plt.show()
