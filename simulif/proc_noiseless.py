@@ -14,7 +14,7 @@
     
 """
 import sys
-import Queue as q
+import queue as q
 import re
 import matplotlib.pyplot as plt
 
