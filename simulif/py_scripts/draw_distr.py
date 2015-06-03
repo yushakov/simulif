@@ -43,35 +43,40 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
 *                                                                           *
 **************************************************************************"""
-from pylab import *
+from pylab import trapz, plot
 import sys
-
-bin_num  = 1000
-spike_threshold = 2
-filename = sys.argv[1]
-colnum   = int(sys.argv[2])
-
 from out_proc_util import *
-isi, max_isi = get_isi_array(filename, colnum, spike_threshold)
-len_isi = len(isi)
-step = max_isi / (bin_num)
 
-# get distribution
-distribution = [0.0]*bin_num
-xvalues      = [step*xv for xv in range(bin_num)]
-inv_step = 1.0 / step
-bin_incr = 1.0 / (step * len_isi)
-for interval in isi:
-    dstr_idx = int(interval * inv_step)
-    if interval == max_isi:
-        dstr_idx = bin_num - 1
-    distribution[dstr_idx] += bin_incr
+def get_isi_distrib(fname, colnum, spk_thresh = 2, bin_num = 1000):
+    """
+    isi_len, density = get_isi_distrib(fname, colnum, spk_thresh = 2, bin_num = 1000)
+    """
+    isi, max_isi = get_isi_array(fname, colnum, spk_thresh)
+    len_isi = len(isi)
+    step = max_isi / (bin_num)
 
-S = trapz(distribution, x=xvalues)
-print("Area under the curve: {}".format(S))
+    # get distribution
+    distribution = [0.0]*bin_num
+    xvalues      = [step*xv for xv in range(bin_num)]
+    inv_step = 1.0 / step
+    bin_incr = 1.0 / (step * len_isi)
+    for interval in isi:
+        dstr_idx = int(interval * inv_step)
+        if interval == max_isi:
+            dstr_idx = bin_num - 1
+        distribution[dstr_idx] += bin_incr
+    return xvalues, distribution
 
-plot(xvalues, distribution)
-title("Interspike interval density")
-xlabel("ISI length")
-ylabel("Probability density")
-show()
+if len(sys.argv) >= 3:
+    filename = sys.argv[1]
+    colnum   = int(sys.argv[2])
+    xvalues, distribution = get_isi_distrib(filename, colnum)
+
+    S = trapz(distribution, x=xvalues)
+    print("Area under the curve: {}".format(S))
+
+    plot(xvalues, distribution)
+    title("Interspike interval density")
+    xlabel("ISI length")
+    ylabel("Probability density")
+    show()
