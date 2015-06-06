@@ -10,4 +10,4 @@ C_SRC := \
 ./rk4.c
 
 all:
-	gcc -O3 -Wall $(C_SRC) -o "../Release/simulif.exe"
+	gcc -O3 -Wall -x c $(C_SRC) -o simulif.exe -lm

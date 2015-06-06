@@ -43,7 +43,7 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
 *                                                                           *
 **************************************************************************"""
-from pylab import trapz, plot
+from pylab import trapz, plot, title, xlabel, ylabel, show
 import sys
 from out_proc_util import *
 
