@@ -189,6 +189,12 @@ def inorder(root):
         print(root.key)
         inorder(root.right)
         
+def inorder_val(root):
+    if root:
+        inorder_val(root.left)
+        print(str(root.key) + ", " + str(root.val))
+        inorder_val(root.right)
+        
         
 def print_tree(root):
     '''Print the tree rooted at root.'''
@@ -204,36 +210,30 @@ def print_helper(root, indent):
         print(indent + str(root.key))
         print_helper(root.left, indent + "   ")
 
-
-tree = BinarySearchTree()
-line = input("command> ")
-while line != "quit":
-    cmdlist = line.split()
-    if cmdlist != []:
-        cmd = cmdlist[0]
-        if cmd == "has_key":
-            print(tree.has_key(int(cmdlist[1])))
-        elif cmd == "put":
-            if len(cmdlist) == 2:
-                val = "default"
-            else:
-                val = cmdlist[2]
-            tree.put(int(cmdlist[1]),val)
-            print_tree(tree.root)
-        elif cmd == "get":
-            print(tree.get(int(cmdlist[1])))
-        elif cmd == "delete":
-            tree.delete(int(cmdlist[1]))
-            print_tree(tree.root)
-        elif cmd == "iterate":
-            for elt in tree:
-                print(elt)
-        
+def bst_test():
+    """Command prompt-like tree testing"""
+    tree = BinarySearchTree()
     line = input("command> ")
-        
-    
-                
-        
-        
-        
-    
+    while line != "quit":
+        cmdlist = line.split()
+        if cmdlist != []:
+            cmd = cmdlist[0]
+            if cmd == "has_key":
+                print(tree.has_key(int(cmdlist[1])))
+            elif cmd == "put":
+                if len(cmdlist) == 2:
+                    val = "default"
+                else:
+                    val = cmdlist[2]
+                tree.put(int(cmdlist[1]),val)
+                print_tree(tree.root)
+            elif cmd == "get":
+                print(tree.get(int(cmdlist[1])))
+            elif cmd == "delete":
+                tree.delete(int(cmdlist[1]))
+                print_tree(tree.root)
+            elif cmd == "iterate":
+                for elt in tree:
+                    print(elt)
+            
+        line = input("command> ")
