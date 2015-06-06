@@ -37,6 +37,7 @@ def get_isi_array(filename, colnum, spike_threshold):
     prev_t  = 0
     idx     = 0
     max_isi = 0
+    xprev   = 0
     for line in f:
         s = line.strip()
         if s and s[0] != '#':
