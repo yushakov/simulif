@@ -104,7 +104,7 @@ int parseArguments(int acnt, char *avec[], System *sys_param)
 
 	for (argIdx = 1; argIdx < acnt; argIdx++)
 	{
-		if (strcmp(avec[argIdx], "-n") == 0) // add neuron
+		if (avec[argIdx][0] == '-' && avec[argIdx][1] == 'n') // add neuron (some comment may be attched after n)
 		{
 			pN = (Neuron*)malloc(sizeof(Neuron));
 			if (sys_param->neuron == 0)
