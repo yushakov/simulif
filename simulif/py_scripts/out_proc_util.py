@@ -25,11 +25,13 @@
 *  along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
 *                                                                           *
 **************************************************************************"""
-def get_isi_array(filename, colnum, spike_threshold):
-    """isi, max_isi = get_isi_array(filename, colnum, spike_threshold)
+import pylab as pl
+
+def get_isi_array(filename, neuron_num, spike_threshold):
+    """isi, max_isi = get_isi_array(filename, neuron_num, spike_threshold)
        
         Creates an ISI array from the output of simulif.exe
-        at specified column.
+        for specified neuron_num (starting from 0).
     """
     f = open(filename)
                   
@@ -43,14 +45,14 @@ def get_isi_array(filename, colnum, spike_threshold):
         if s and s[0] != '#':
             fields = line.split(',')
             x      = tuple([float(field) for field in fields])
-            if idx > 0 and xprev < spike_threshold < x[colnum]:
+            if idx > 0 and xprev < spike_threshold < x[neuron_num+1]:
                 interval = x[0] - prev_t
                 isi.append(interval)
                 if max_isi < interval:
                     max_isi = interval
                 prev_t = x[0]
             else:
-                xprev = x[colnum]
+                xprev = x[neuron_num+1]
             idx += 1
     f.close()
     return isi, max_isi
@@ -80,3 +82,75 @@ def sampled_spike_train_from_isi(isi, dt, spike_value):
         
         spike_train.extend(to_be_added)
     return spike_train
+    
+def get_isi_distrib(fname, neuron_num, spk_thresh = 2, bin_num = 1000):
+    """
+    isi_len, density, isi = get_isi_distrib(fname, neuron_num, spk_thresh = 2, bin_num = 1000)
+    """
+    isi, max_isi = get_isi_array(fname, neuron_num, spk_thresh)
+    len_isi = len(isi)
+    step = max_isi / (bin_num)
+
+    # get distribution
+    distribution = [0.0]*bin_num
+    xvalues      = [step*xv for xv in range(bin_num)]
+    inv_step = 1.0 / step
+    bin_incr = 1.0 / (step * len_isi)
+    for interval in isi:
+        dstr_idx = int(interval * inv_step)
+        if interval == max_isi:
+            dstr_idx = bin_num - 1
+        distribution[dstr_idx] += bin_incr
+    return xvalues, distribution, isi
+    
+def save_isi(input_file, output_file, neuron_number, threshold=2, draw_hist=True):
+    """
+        Save Inter-Spike Intervals.
+    """
+    print(
+    "Getting ISI array for neuron " + str(neuron_number) + 
+    "\nfrom the file " + input_file)
+    isi, _ = get_isi_array(input_file, neuron_number, threshold)
+    print("Writing to file")
+    f = open(output_file, "w")
+    for i in isi:
+        f.write(str(i)+"\n")
+    f.close()
+    
+    if draw_hist:
+        pl.hist(isi, bins=500, normed=True)
+        pl.draw()
+        pl.show()
+        
+def draw_isids(file_name, neurons_list, prefix_to_save_isi=None):
+    """
+        Draw Inter-Spike Interval distributions.
+            neurons_list - is something like [3, 4, 5], where a neuron's
+              number starts from 0.
+            prefix_to_save_isi - is for saving ISIs to text files.
+        Example:
+            >>> draw_isids("output.txt", [3, 4, 5], "folder/isi_N")
+            After completion there will be isi_N3.txt, isi_N4.txt,
+            and isi_N5.txt in the "folder".
+    """
+    fig = pl.figure()
+    fig.suptitle(file_name)
+    SubPlots = []
+    for i, n in enumerate(neurons_list):
+        print("Getting distribution "+str(n)+"...")
+        x, y, isi = get_isi_distrib(file_name, n)
+        if i > 0:
+            sp   = fig.add_subplot(len(neurons_list), 1, i+1, sharex=SubPlots[0])
+        else:
+            sp   = fig.add_subplot(len(neurons_list), 1, i+1)
+        sp.plot(x, y)
+        sp.set_ylabel("Neuron "+str(n))
+        SubPlots.append(sp)
+        if prefix_to_save_isi:
+            print("Writing to file")
+            f = open(prefix_to_save_isi+str(n)+".txt", "w")
+            for i in isi:
+                f.write(str(i)+"\n")
+            f.close()
+    pl.draw()
+    pl.show()
