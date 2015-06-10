@@ -37,6 +37,9 @@ def get_entropy(isi_file_name, draw=True):
         Draws plots for both, if draw=True
     """    
     isi    = pl.loadtxt(isi_file_name)
+    return get_entropy_from_isi_array(isi, draw, isi_file_name)
+
+def get_entropy_from_isi_array(isi, draw=True, file_name=""):
     T0     = 0.9*min(isi)
     
     # ISI binarization
@@ -94,7 +97,7 @@ def get_entropy(isi_file_name, draw=True):
         
     if draw:
         fig = pl.figure()
-        fig.suptitle(isi_file_name+", Bin interval: "+str(T0) +
+        fig.suptitle(file_name+", Bin interval: "+str(T0) +
         "\nH("+str(Horder)+"): "+str(H))
         sp1 = fig.add_subplot(211)
         sp1.plot([o for o in range(1, len(Hvals)+1)], Hvals)
