@@ -27,33 +27,31 @@
 **************************************************************************"""
 import pylab as pl
 
-def get_isi_array(filename, neuron_num, spike_threshold):
+def get_isi_array(filename, neuron_num, spike_threshold, min_isi=1.e-2):
     """isi, max_isi = get_isi_array(filename, neuron_num, spike_threshold)
        
         Creates an ISI array from the output of simulif.exe
         for specified neuron_num (starting from 0).
+        min_isi - if only spikes present in the signal file (filename),
+                  then two spikes are separated, if the time interval
+                  between them is >= min_isi.
     """
     f = open(filename)
                   
     isi     = []
     prev_t  = 0
-    idx     = 0
     max_isi = 0
-    xprev   = 0
     for line in f:
         s = line.strip()
         if s and s[0] != '#':
-            fields = line.split(',')
-            x      = tuple([float(field) for field in fields])
-            if idx > 0 and xprev < spike_threshold < x[neuron_num+1]:
-                interval = x[0] - prev_t
+            fields   = line.split(',')
+            x        = tuple([float(field) for field in fields])
+            interval = x[0] - prev_t
+            if spike_threshold < x[neuron_num+1] and interval >= min_isi:
                 isi.append(interval)
                 if max_isi < interval:
                     max_isi = interval
                 prev_t = x[0]
-            else:
-                xprev = x[neuron_num+1]
-            idx += 1
     f.close()
     return isi, max_isi
     
