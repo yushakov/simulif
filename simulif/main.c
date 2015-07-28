@@ -31,6 +31,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <time.h>
 #include "rk4.h"
 
 #include "sim_system.h"
@@ -40,7 +41,7 @@
   #define NULL 0
 #endif
 
-static char version[] = "1.1.12";
+static char version[] = "1.1.13";
 
 #define PRINT(fp, str, ...) fprintf(fp, str, __VA_ARGS__); printf(str, __VA_ARGS__)
 
@@ -77,6 +78,7 @@ int main(int argc, char *argv[])
 	double tprev = 0.0;
 	int    cnt   = 0;
 	FILE  *fp = fopen("output.txt", "w");
+	struct tm _time;
 
 	if(argc < 2)
 	{
@@ -182,6 +184,9 @@ int main(int argc, char *argv[])
 
 			if(t > next_dot)
 			{
+				time_t now = time(0);
+				_time = *localtime(&now);
+				fprintf(fp, "# dot %d:%d:%d\n", _time.tm_hour, _time.tm_min, _time.tm_sec);
 				printf(".");
 				fflush(0);
 				next_dot += dot_interval;
