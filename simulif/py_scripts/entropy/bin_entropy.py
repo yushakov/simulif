@@ -51,10 +51,10 @@ def get_entropy_from_isi_array(isi, draw=True, file_name="", quant=None):
     if quant:
         T0 = quant
     else:
-        T0     = 0.9*min(isi)
+        T0 = 0.9*min(isi)
     
     # ISI binarization
-    print("ISI binarization")
+    print("ISI binarization with interval "+str(T0))
     out_bin = []
     isi_idx = 0
     Tcurr   = isi[0]
@@ -81,6 +81,8 @@ def get_entropy_from_isi_array(isi, draw=True, file_name="", quant=None):
     Hprev    = 0.0
     Intervals = (N-MaxOrder)*[0]
     for Horder in range(1, MaxOrder+1):
+        xp = list()
+        yp = list()
         tree = bst.BinarySearchTree()
         for i, intv in enumerate(Intervals):
             T = (intv << 1) | out_bin[i+Horder-1]
@@ -95,7 +97,15 @@ def get_entropy_from_isi_array(isi, draw=True, file_name="", quant=None):
         for key, val in tree.root:
             p = val * invN
             H -= p * pl.log2(p)
-    
+            xp.append(key)
+            yp.append(val)
+        if Horder == 0: # choose any to view probabilities picture
+            pl.plot(xp, yp, '.-')
+            pl.grid(True)
+            pl.title(file_name)
+            pl.show()
+            return
+        
         if Horder > 1:
             delta = (H - Hprev)
             Hdelt.append(delta)
