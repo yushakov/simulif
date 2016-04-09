@@ -41,7 +41,7 @@
   #define NULL 0
 #endif
 
-static char version[] = "1.1.13";
+static char version[] = "1.1.14";
 
 #define PRINT(fp, str, ...) fprintf(fp, str, __VA_ARGS__); printf(str, __VA_ARGS__)
 
