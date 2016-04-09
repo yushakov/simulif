@@ -77,7 +77,9 @@ int main(int argc, char *argv[])
 	double t     = 0.0;
 	double tprev = 0.0;
 	int    cnt   = 0;
-	FILE  *fp = fopen("output.txt", "w");
+	FILE  *fp;
+	long long out_cnt = 0LL;
+	char out_file_name[500];
 	struct tm _time;
 
 	if(argc < 2)
@@ -89,6 +91,8 @@ int main(int argc, char *argv[])
 		printf("Version: %s\n", version);
 	}
 
+	sprintf(out_file_name, "out_%ld.txt", out_cnt);
+	fp = fopen(out_file_name, "w");
 	PRINT(fp, "# Version: %s\n\n", version);
 
 	system.neuron       = NULL;
@@ -186,6 +190,9 @@ int main(int argc, char *argv[])
 			{
 				time_t now = time(0);
 				_time = *localtime(&now);
+				fclose(fp);
+				sprintf(out_file_name, "out_%ld.txt", ++out_cnt);
+				fp = fopen(out_file_name, "w");
 				fprintf(fp, "# dot %d:%d:%d\n", _time.tm_hour, _time.tm_min, _time.tm_sec);
 				printf(".");
 				fflush(0);

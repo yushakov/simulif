@@ -7,7 +7,9 @@ set Time=20000
 -n -1. 0.3665 4.0 -1. 3.0 1.0 ^
    -k 0.98 0 0.0 ^
    -k 0.98 1 0.0
-mv output.txt output4by3.txt
+set dname=output4by3
+mkdir %dname%
+mv out_*.txt %dname%
 
 ..\Release\simulif.exe -t %Time% -s 1000 ^
 -n 0.0 1.0    4.0 0.0 3.0 1.0 -f cos 1.084  0.4 0.0 ^
@@ -15,4 +17,6 @@ mv output.txt output4by3.txt
 -n -1. 0.3665 4.0 -1. 3.0 1.0 ^
    -k 0.98 0 ^
    -k 0.98 1
-mv output.txt output5by4.txt
+set dname=output5by4
+mkdir %dname%
+mv out_*.txt %dname%
