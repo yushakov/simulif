@@ -151,7 +151,12 @@ int main(int argc, char *argv[])
 
 	// calculation cycle
 	rk4_init(order);
-
+	{
+		// initial time output
+		time_t now = time(0);
+		_time = *localtime(&now);
+		fprintf(fp, "# dot %d:%d:%d\n", _time.tm_hour, _time.tm_min, _time.tm_sec);
+	}
 	dot_interval = calc_time / 50.0;
 	next_dot     = dot_interval;
 	printf("Calculation time: %f\n", calc_time);
