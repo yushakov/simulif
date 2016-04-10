@@ -29,7 +29,9 @@
 
 import sys
 sys.path.insert(0, r"C:\Users\user1\My Documents\GitHub\simulif\simulif\py_scripts")
-
+print("Wait for import to be completed...")
 import pylab as pl
 from   entropy.bin_entropy import get_entropy
 import out_proc_util as opu
+print("--- pylab has been imported as pl")
+print("--- out_proc_util has been imported as opu")
