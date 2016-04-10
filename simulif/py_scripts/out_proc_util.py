@@ -162,14 +162,19 @@ def aggregate(dir_name, output_file_name="output.txt"):
     out_cnt = 0
     ofl = open(output_file_name,"w")
     while True:
+        fname = dir_name + "/out_" + str(out_cnt) + ".txt"
         try:
-            infl = open(dir_name + "out_" + str(out_cnt) + ".txt")
+            infl = open(fname)
         except IOError as e:
             print("No more files. The last one was: "+"out_" + str(out_cnt-1) + ".txt")
             break
         else:
+            print("Gathering data from: " + fname + "...")
+            line_cnt = 0
             for line in infl:
                 ofl.write(line)
+                line_cnt += 1
             infl.close()
+            print("   " + str(line_cnt) + " lines copied to the file " + output_file_name)
             out_cnt += 1
     ofl.close()
