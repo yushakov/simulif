@@ -74,7 +74,7 @@ int spikeQ_push(Spike s, SpikeQ *sq)
 		{
 			// resize queue
 			Spike *new_q = 0;
-			new_q = calloc(2 * sq->size, sizeof(Spike));
+			new_q = (Spike*)calloc(2 * sq->size, sizeof(Spike));
 			if (new_q)
 			{
 				// copy queue to the new memory location

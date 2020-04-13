@@ -28,6 +28,7 @@
 #ifndef SIM_SYSTEM_H
 #define SIM_SYSTEM_H
 
+#include "randistrs.h"
 #include "neuron.h"
 #include "spike.h"
 

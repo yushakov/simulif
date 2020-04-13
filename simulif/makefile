@@ -10,4 +10,4 @@ C_SRC := \
 ./rk4.c
 
 all:
-	gcc -O3 -Wall -x c $(C_SRC) -o simulif.exe -lm
+	g++ -O3 -Wall -x c $(C_SRC) -o simulif.exe -I mtwist-1.5 -lm

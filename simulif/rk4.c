@@ -28,7 +28,9 @@
 #include "rk4.h"
 #include <malloc.h>
 
+#ifndef NULL
 #define NULL 0
+#endif
 
 int     g_varNum  = 0;
 double *g_kout    = NULL;
