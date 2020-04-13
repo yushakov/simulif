@@ -27,7 +27,6 @@
 
 #include "sim_system.h"
 #include "rk4.h"
-#include "mtwist-1.5/randistrs.h"
 #include <math.h>
 
 /*
